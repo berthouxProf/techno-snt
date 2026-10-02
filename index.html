@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Techno &amp; SNT – Ressources élèves</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script>
+/* =====================================================================
+   ✏️  POUR AJOUTER UNE PAGE : copie une ligne ci-dessous et modifie-la.
+   niveau : "5eme" | "4eme" | "3eme" | "seconde" | "outils" | "projets"
+   fichier : chemin relatif depuis ce fichier index.html
+   ===================================================================== */
+const SITE = {
+  titre: "Techno & SNT",
+  sousTitre: "Les activités, simulateurs et défis vus en classe. Choisis ton niveau, puis ton sujet."
+};
+
+const RESSOURCES = [
+  { niveau:"seconde", sujet:"Le Web", titre:"La Quête du Web",
+    description:"Parcours en 5 séances : Internet ou Web, client/serveur, HTML, CSS, recherche et sécurité.",
+    fichier:"seconde-snt/le-web/la-quete-du-web.html" },
+
+  { niveau:"projets", sujet:"Jeux vidéo", titre:"Forge 2D – moteur de tuiles",
+    description:"Mini-jeu d'aventure en 2D : explore la carte, ouvre les coffres et réponds aux questions.",
+    fichier:"projets/jeux-video/forge-2d-moteur-de-tuiles.html" },
+
+  { niveau:"outils", sujet:"Vie de classe", titre:"Limitateur de volume",
+    description:"Le sonomètre de la classe : reste sous la ligne selon le type d'activité.",
+    fichier:"outils-classe/limitateur-de-volume.html" },
+
+  { niveau:"outils", sujet:"Vie de classe", titre:"Élections de classe",
+    description:"Préparation, vote, dépouillement et résultats de l'élection des délégués.",
+    fichier:"outils-classe/elections-de-classe.html" },
+];
+
+/* Ordre d'affichage et couleurs (code couleur des résistances 😉) */
+const NIVEAUX = [
+  { id:"5eme",    nom:"5ème",            couleur:"var(--vert)" },
+  { id:"4eme",    nom:"4ème",            couleur:"var(--jaune)" },
+  { id:"3eme",    nom:"3ème",            couleur:"var(--orange)" },
+  { id:"seconde", nom:"Seconde SNT",     couleur:"var(--bleu)" },
+  { id:"projets", nom:"Projets",         couleur:"var(--violet)" },
+  { id:"outils",  nom:"Outils de classe",couleur:"var(--gris)" },
+];
+</script>
+<style>
+:root{
+  --fond:#EEF1EC; --carte:#FFFFFF; --encre:#1D2B2F; --doux:#58676B; --trait:#C9D1CB;
+  --vert:#2F8A57; --jaune:#D9A400; --orange:#D9681E; --bleu:#2E5FA8; --violet:#7650A2; --gris:#6E7B80;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --fond:#162024; --carte:#1F2C31; --encre:#E6ECE8; --doux:#9FB0B3; --trait:#34454A;
+  --vert:#55B87E; --jaune:#F0C23A; --orange:#F08A44; --bleu:#6E9BE3; --violet:#A884D4; --gris:#9AA8AC;
+}}
+:root[data-theme="dark"]{
+  --fond:#162024; --carte:#1F2C31; --encre:#E6ECE8; --doux:#9FB0B3; --trait:#34454A;
+  --vert:#55B87E; --jaune:#F0C23A; --orange:#F08A44; --bleu:#6E9BE3; --violet:#A884D4; --gris:#9AA8AC;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--fond);color:var(--encre);
+  font:1.0625rem/1.55 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:62rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+
+/* En-tête : une résistance dont les bandes sont les niveaux */
+header{display:grid;gap:1.25rem}
+h1{font:800 clamp(2.4rem,7vw,4.2rem)/1 "Bricolage Grotesque",system-ui,sans-serif;margin:0;letter-spacing:-.02em}
+.intro{margin:0;color:var(--doux);max-width:38rem}
+.resistance{display:flex;align-items:center;margin:.5rem 0 .25rem}
+.fil{height:4px;flex:1;background:var(--trait);border-radius:2px}
+.corps{display:flex;gap:.5rem;align-items:stretch;padding:0 1.1rem;height:4.4rem;
+  background:#E8D3A6;border-radius:2.2rem;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .corps{background:#BFA676}}
+.bande{all:unset;cursor:pointer;width:clamp(2.2rem,8vw,3.6rem);display:flex;align-items:flex-end;justify-content:center;
+  font:700 .72rem/1 "Atkinson Hyperlegible",sans-serif;color:#fff;padding-bottom:.45rem;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);transition:transform .15s}
+.bande:hover{transform:translateY(-3px)}
+.bande:focus-visible{outline:3px solid var(--encre);outline-offset:3px}
+.bande[aria-pressed="true"]{transform:translateY(-6px);box-shadow:0 6px 0 var(--encre)}
+
+/* Filtres */
+.filtres{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.filtres button{font:inherit;font-size:.95rem;cursor:pointer;border:2px solid var(--trait);background:var(--carte);color:var(--encre);
+  padding:.35rem .9rem;border-radius:999px}
+.filtres button[aria-pressed="true"]{border-color:var(--encre);background:var(--encre);color:var(--fond)}
+.filtres button:focus-visible{outline:3px solid var(--bleu);outline-offset:2px}
+
+/* Sections */
+section.niveau{margin-top:3rem;border-left:8px solid var(--c);padding-left:1.25rem}
+section.niveau h2{font:800 1.9rem/1.1 "Bricolage Grotesque",system-ui,sans-serif;margin:0 0 .25rem}
+h3{font:700 1rem/1.3 "Atkinson Hyperlegible",sans-serif;color:var(--doux);margin:1.5rem 0 .6rem}
+.liste{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr))}
+a.ress{display:block;text-decoration:none;color:inherit;background:var(--carte);padding:1rem 1.1rem;border-radius:.5rem;
+  border:1px solid var(--trait);border-top:4px solid var(--c)}
+a.ress:hover{border-color:var(--c)}
+a.ress:focus-visible{outline:3px solid var(--c);outline-offset:2px}
+a.ress strong{display:block;font-size:1.1rem;margin-bottom:.25rem}
+a.ress span{color:var(--doux);font-size:.95rem}
+.vide{color:var(--doux);font-style:italic;margin:.5rem 0 0}
+footer{margin-top:4rem;color:var(--doux);font-size:.9rem;border-top:1px solid var(--trait);padding-top:1rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="titre"></h1>
+    <p class="intro" id="sous-titre"></p>
+    <div class="resistance" aria-label="Choisir un niveau" role="group">
+      <div class="fil"></div><div class="corps" id="bandes"></div><div class="fil"></div>
+    </div>
+    <div class="filtres" id="filtres" role="group" aria-label="Filtrer par niveau"></div>
+  </header>
+  <main id="contenu"></main>
+  <footer>Pages hébergées avec GitHub Pages. Une page ne s'ouvre pas ? Signale-le à ton professeur.</footer>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+let filtre = "tous";
+try { filtre = sessionStorage.getItem("filtre-niveau") || "tous"; } catch(e){}
+
+function el(tag, attrs={}, ...kids){
+  const n = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)){
+    if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if (k === "style") n.style.cssText = v;
+    else n.setAttribute(k, v);
+  }
+  kids.flat().forEach(k => n.append(k));
+  return n;
+}
+
+function choisir(id){
+  filtre = (filtre === id && id !== "tous") ? "tous" : id;
+  try { sessionStorage.setItem("filtre-niveau", filtre); } catch(e){}
+  rendre();
+}
+
+function rendre(){
+  $("#titre").textContent = SITE.titre;
+  $("#sous-titre").textContent = SITE.sousTitre;
+
+  const bandes = $("#bandes"); bandes.innerHTML = "";
+  NIVEAUX.slice(0,4).forEach(n => bandes.append(
+    el("button",{class:"bande","aria-pressed":String(filtre===n.id),style:`background:${n.couleur}`,
+      title:n.nom, onclick:()=>choisir(n.id)}, n.nom.replace(" SNT",""))
+  ));
+
+  const f = $("#filtres"); f.innerHTML = "";
+  [{id:"tous",nom:"Tout voir"}, ...NIVEAUX].forEach(n => f.append(
+    el("button",{"aria-pressed":String(filtre===n.id), onclick:()=>choisir(n.id)}, n.nom)
+  ));
+
+  const main = $("#contenu"); main.innerHTML = "";
+  NIVEAUX.filter(n => filtre==="tous" || filtre===n.id).forEach(n => {
+    const items = RESSOURCES.filter(r => r.niveau === n.id);
+    const sec = el("section",{class:"niveau",style:`--c:${n.couleur}`}, el("h2",{}, n.nom));
+    if (!items.length){
+      sec.append(el("p",{class:"vide"},"Les activités de ce niveau arrivent bientôt."));
+    } else {
+      const sujets = [...new Set(items.map(r => r.sujet))].sort((a,b)=>a.localeCompare(b,"fr"));
+      sujets.forEach(s => {
+        sec.append(el("h3",{}, s));
+        sec.append(el("div",{class:"liste"},
+          items.filter(r => r.sujet===s).map(r =>
+            el("a",{class:"ress",href:r.fichier}, el("strong",{},r.titre), el("span",{},r.description||""))
+          )
+        ));
+      });
+    }
+    main.append(sec);
+  });
+}
+rendre();
+</script>
+</body>
+</html>
